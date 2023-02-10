@@ -1,25 +1,38 @@
 import mysql.connector
 from mysql.connector import Error
+import colorama
+from colorama import Fore
 
+outF = open("hasil.txt", "w")
 
-def connect():
-    """ Connect to MySQL database """
-    conn = None
-    try:
-        conn = mysql.connector.connect(host='localhost',
-                                       database='python_mysql',
-                                       user='root',
-                                       password='SecurePass1!')
-        if conn.is_connected():
-            print('Connected to MySQL database')
+with open('list.txt') as f:
+    for line in f:
+        s = line.rstrip()
+        rest = s.rsplit('|', 3)
+        hostname = rest[0]
+        username = rest[1]
+        passnya = rest[2]
+        dbName = rest[3]
 
-    except Error as e:
-        print(e)
+        # print(hostname + " : " + username + " : " + passnya + " : " + dbName)
+        # s.rsplit('|', 1)
 
-    finally:
-        if conn is not None and conn.is_connected():
-            conn.close()
+        conn = None
+        try:
+            conn = mysql.connector.connect(host=hostname,
+                                           database=dbName,
+                                           user=username,
+                                           password=passnya)
+            if conn.is_connected():
+                print(Fore.GREEN + hostname + " : " + username +
+                      " : " + passnya + " : " + dbName + " Connected BosQ")
+                outF.write(line)
+                outF.write("\n")
+                outF.close()
 
+        except Error as e:
+            print(e)
 
-if __name__ == '__main__':
-    connect()
+        finally:
+            if conn is not None and conn.is_connected():
+                conn.close()
