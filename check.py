@@ -3,7 +3,7 @@ from mysql.connector import Error
 import colorama
 from colorama import Fore
 
-outF = open("hasil.txt", "w")
+# outF = open("hasil.txt", "w")
 
 with open('list.txt') as f:
     for line in f:
@@ -26,9 +26,11 @@ with open('list.txt') as f:
             if conn.is_connected():
                 print(Fore.GREEN + hostname + " : " + username +
                       " : " + passnya + " : " + dbName + " Connected BosQ")
-                outF.write(line)
-                outF.write("\n")
-                outF.close()
+                with open('hasil.txt', 'a', encoding='utf-8') as outF:
+                    # print(line + "\n") >> hasil.txt
+                    outF.write(hostname + " : " + username +
+                               " : " + passnya + " : " + dbName+"\n")
+                    # outF.close()
 
         except Error as e:
             print(e)
